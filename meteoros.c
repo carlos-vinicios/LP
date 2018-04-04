@@ -1,11 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> //funções de string
-#include <conio.h> //biblioteca que contem o kbhit
+//#include <conio.h> //biblioteca que contem o kbhit ---------- funciona apenas no Windows
+
+//bibliotecas necessárias para funcionamento no linux
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+//bibliotecas
 
 int ptns = 10; //pontuação do jogo
 int linhas = 16; //quantidade de linhas usadas para as matrizes do jogo
 int colunas = 60; //quantidade de colunas usadas para as matrizes do jogo
+
+int kbhit(void) //necessário para funcionamento no Linux
+{
+  struct termios oldt, newt;
+  int ch;
+  int oldf;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+  ch = getchar();
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+  if(ch != EOF)
+  {
+    ungetc(ch, stdin);
+    return 1;
+  }
+
+  return 0;
+}
 
 void pontos() { //exibe apenas a pontuação
   printf("Pontuacao: %d\n", ptns);
@@ -140,7 +173,7 @@ int main() {
   render_graphics(eixos_meteoros, eixos_disparos, eixo_nave);
   do {
     if(kbhit()){ //chamada toda vez que uma tecla é acionada no teclado
-      char tecla = getch();
+      char tecla = getchar(); //no Linux é utilizado getchar
       switch (tecla) {
         case 'd': //movimenta para a esquerda
         case 'D':
