@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+char numero[7];
 
 void unidade(char unidade){
   switch (unidade) {
@@ -35,65 +36,67 @@ void unidade(char unidade){
   }
 }
 
-switch (numero[1]) {
-  case '0':
-    printf("Dez");
-    break;
-  case '1':
-    printf("Onze");
-    break;
-  case '2':
-    printf("Doze");
-    break;
-  case '3':
-    printf("Treze");
-    break;
-  case '4':
-    printf("Quatorze");
-    break;
-  case '5':
-    printf("Quinze");
-    break;
-  case '6':
-    printf("Dezeseis");
-    break;
-  case '7':
-    printf("Dezesete");
-    break;
-  case '8':
-    printf("Dezoito");
-    break;
-  case '9':
-    printf("Dezenove");
-    break;
+void dezena_especial(char numero){
+  switch (numero) {
+    case '0':
+      printf("Dez");
+      break;
+    case '1':
+      printf("Onze");
+      break;
+    case '2':
+      printf("Doze");
+      break;
+    case '3':
+      printf("Treze");
+      break;
+    case '4':
+      printf("Quatorze");
+      break;
+    case '5':
+      printf("Quinze");
+      break;
+    case '6':
+      printf("Dezeseis");
+      break;
+    case '7':
+      printf("Dezesete");
+      break;
+    case '8':
+      printf("Dezoito");
+      break;
+    case '9':
+      printf("Dezenove");
+      break;
+  }
 }
 
 
 void dezena(char dezena){
   switch(dezena){
     case '2':
-      printf("Vinte e ");
+      printf("Vinte");
       break;
     case '3':
-        printf("Trinta e ");
+        printf("Trinta");
       break;
     case '4':
-        printf("Quarenta e ");
+        printf("Quarenta");
       break;
     case '5':
-        printf("Cinquenta e ");
+        printf("Cinquenta");
       break;
     case '6':
-        printf("Sessenta e ");
+        printf("Sessenta");
       break;
     case '7':
-        printf("Setenta e ");
+        printf("Setenta");
       break;
     case '8':
-        printf("Oitenta e ");
+        printf("Oitenta");
       break;
     case '9':
-        printf("Noventa e ");
+        printf("Noventa");
       break;
   }
 }
@@ -101,7 +104,7 @@ void dezena(char dezena){
 void centena(char centena){
   switch (centena) {
     case '1':
-      printf("Cem");
+      printf("Cento");
       break;
     case '2':
       printf("Duzentos");
@@ -130,9 +133,47 @@ void centena(char centena){
   }
 }
 
+void chamada_dezena(){
+  if(numero[0] != '1'){
+    dezena(numero[0]);
+    printf(" e ");
+    unidade(numero[1]);
+  }else{
+    dezena_especial(numero[1]);
+  }
+}
+
+void chamada_centena(){
+  if(numero[0] == '1' && numero[1] == '0' && numero[2] == '0'){
+    printf("Cem");
+  }else{
+    centena(numero[0]);
+    printf(" e ");
+    if(numero[1] != '1'){
+      dezena(numero[1]);
+      printf(" e ");
+      unidade(numero[2]);
+    }else{
+      dezena_especial(numero[2]);
+    }
+  }
+}
+
+void milhar(int type){
+  switch (type) {
+    case 1:
+      unidade(numero[0]);
+      break;
+    case 2:
+      chamada_dezena();
+      break;
+    case 3:
+      chamada_centena();
+      break;
+  }
+}
+
 int main() {
-  char numero[7];
-  //char extenso[10000000];
   int tamanho;
 
   printf("Digite o numero que deseja:\n");
@@ -144,16 +185,22 @@ int main() {
       unidade(numero[0]);
       break;
     case 2:
-      dezena(numero[0]);
-      unidade(numero[1]);
+      chamada_dezena();
       break;
     case 3:
-      centena(numero[0]);
-      dezena(numero[1]);
-      unidade(numero[2]);
+      chamada_centena();
       break;
     case 4:
-      //milhar(numero);
+      milhar(1); //apenas unidade
+      printf(" mil");
+      break;
+    case 5:
+      milhar(2); //apenas dezena
+      printf(" mil");
+      break;
+    case 6:
+      milhar(3); //apenas centena
+      printf(" mil");
       break;
   }
   printf(" reais");
