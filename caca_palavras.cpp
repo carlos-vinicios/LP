@@ -6,7 +6,7 @@
 using namespace std;
 
 int linhade(char **matriz, int tamanho, char *palavra, int *coluna){//direita esquerda
-  int i, j, k;
+  int i, j, k, col;
   char *word, *filter;
 
   filter = new char[tamanho];
@@ -20,8 +20,9 @@ int linhade(char **matriz, int tamanho, char *palavra, int *coluna){//direita es
     }
     word[k] = '\0';
     filter = strstr(word, palavra);
+    col = (tamanho - 1) - (filter - word);
     if(filter != NULL){
-      *coluna = (tamanho - 1) - (filter - word);
+      *coluna = col;
       delete filter;
       delete word;
       return i;
@@ -30,30 +31,33 @@ int linhade(char **matriz, int tamanho, char *palavra, int *coluna){//direita es
 
   delete filter;
   delete word;
-  return 0;
+  return -1;
 }
 
 int linhaed(char **matriz, int tamanho, char *palavra, int *coluna){//esquerda direita
   int i;
-  char *filter;
+  char *filter, *word;
 
   filter = new char[tamanho];
+  word = new char[tamanho];
 
   for (i = 0; i < tamanho; i++) {
-    filter = strstr(matriz[i], palavra);
+    strcpy(word, matriz[i]);
+
+    filter = strstr(word, palavra);
     if(filter != NULL){
-      *coluna = filter - palavra;
+      *coluna = filter - word;
       delete filter;
       return i;
     }
   }
 
   delete filter;
-  return 0;
+  return -1;
 }
 
 int colunacb(char **matriz, int tamanho, char *palavra, int *coluna){//cima baixo
-  int i, j, k;
+  int i, j, k, linha;
   char *word, *filter;
 
   filter = new char[tamanho];
@@ -67,18 +71,18 @@ int colunacb(char **matriz, int tamanho, char *palavra, int *coluna){//cima baix
     }
 
     word[k] = '\0';
+
     filter = strstr(word, palavra);
     if(filter != NULL){
-      *coluna = filter - palavra;
-      delete filter;
-      delete word;
-      return j;
+      *coluna = i;
+      linha = filter - word;
+      return linha;
     }
   }
 
   delete filter;
   delete word;
-  return 0;
+  return -1;
 }
 
 int colunabc(char **matriz, int tamanho, char *palavra, int *coluna){//baixo cima
@@ -94,32 +98,28 @@ int colunabc(char **matriz, int tamanho, char *palavra, int *coluna){//baixo cim
       word[k] = matriz[j][i];
       k++;
     }
-
     word[k] = '\0';
+
     filter = strstr(word, palavra);
     if(filter != NULL){
-      *coluna = (tamanho - 1) - (filter - palavra);
-
-      delete filter;
-      delete word;
-      return j;
+      *coluna = i;
+      return (tamanho - 1) - (filter - word) + 1;
     }
   }
 
   delete filter;
   delete word;
-  return 0;
+  return -1;
 }
 
 int diagonalPrin(char **matriz, int tamanho, char *palavra, int *coluna){
-  int i, j, k;
+  int i, j, k = 0;
   char *word, *filter;
 
   filter = new char[tamanho];
   word = new char[tamanho];
 
   for (i = 0; i < tamanho; i++) {
-    k = 0;
     for (j = 0; j < tamanho; j++) {
       if(i == j){
         word[k] = matriz[i][j];
@@ -127,29 +127,25 @@ int diagonalPrin(char **matriz, int tamanho, char *palavra, int *coluna){
       }
     }
   }
-
   word[k] = '\0';
   filter = strstr(word, palavra);
   if(filter != NULL){
-    *coluna = filter - palavra;
-    delete filter;
-    delete word;
-    return filter - palavra;
+    *coluna = filter - word;
+    return filter - word;
   }
   delete filter;
   delete word;
-  return 0;
+  return -1;
 }
 
 int diagonalPrinInv(char **matriz, int tamanho, char *palavra, int *coluna){
-  int i, j, k;
+  int i, j, k = 0;
   char *word, *filter;
 
   filter = new char[tamanho];
   word = new char[tamanho];
 
   for (i = tamanho - 1; i >= 0; i--) {
-    k = 0;
     for (j = tamanho - 1; j >= 0; j--) {
       if(i == j){
         word[k] = matriz[i][j];
@@ -157,18 +153,15 @@ int diagonalPrinInv(char **matriz, int tamanho, char *palavra, int *coluna){
       }
     }
   }
-
   word[k] = '\0';
   filter = strstr(word, palavra);
   if(filter != NULL){
-    *coluna = (tamanho - 1) - (filter - palavra);
-    delete filter;
-    delete word;
-    return (tamanho - 1) - (filter - palavra);
+    *coluna = (tamanho - 1) - (filter - word);
+    return (tamanho - 1) - (filter - word);
   }
   delete filter;
   delete word;
-  return 0;
+  return -1;
 }
 
 int diagonalSecun(char **matriz, int tamanho, char *palavra, int *coluna){
@@ -188,18 +181,16 @@ int diagonalSecun(char **matriz, int tamanho, char *palavra, int *coluna){
     j--;
     k++;
   }
-
   word[k] = '\0';
   filter = strstr(word, palavra);
   if(filter != NULL){
-    *coluna = (tamanho - 1) - (filter - palavra);
-    delete filter;
-    delete word;
-    return filter - palavra;
+    *coluna = (tamanho - 1) - (filter - word);
+    return filter - word;
   }
+
   delete filter;
   delete word;
-  return 0;
+  return -1;
 }
 
 int diagonalSecunInv(char **matriz, int tamanho, char *palavra, int *coluna){
@@ -219,18 +210,17 @@ int diagonalSecunInv(char **matriz, int tamanho, char *palavra, int *coluna){
     j++;
     k++;
   }
-
   word[k] = '\0';
   filter = strstr(word, palavra);
   if(filter != NULL){
-    *coluna = filter - palavra;
+    *coluna = filter - word;
     delete filter;
     delete word;
-    return (tamanho - 1) - (filter - palavra);
+    return (tamanho - 1) - (filter - word);
   }
   delete filter;
   delete word;
-  return 0;
+  return -1;
 }
 
 int main() {
@@ -242,7 +232,7 @@ int main() {
 
   busca = new char[tamanho];
 
-  jogo = new char *[tamanho];
+  jogo = new char *[tamanho+1];
   for(i = 0; i < tamanho; i++) {
     jogo[i] = new char[tamanho];
   }
@@ -255,78 +245,80 @@ int main() {
   cout << "Entre com a palavra que deseja buscar:\n";
   cin >> busca;
 
-  linha = 0;
-  coluna = 0;
+  linha = -1;
+  coluna = -1;
   linha = linhade(jogo, tamanho, busca, &coluna);
 
-  if((linha && coluna) > 0){
+  if(linha >= 0 && coluna >= 0){
     cout << "Achou direita para esquerda\n";
     cout << "Linha: " << linha + 1 << '\n';
     cout << "Coluna: " << coluna << '\n';
   }
 
-  linha = 0;
-  coluna = 0;
+  linha = -1;
+  coluna = -1;
   linha = linhaed(jogo, tamanho, busca, &coluna);
-  if((linha && coluna) > 0){
+  if(linha >= 0 && coluna >= 0){
     cout << "Achou esquerda para direita\n";
     cout << "Linha: " << linha + 1 << '\n';
     cout << "Coluna: " << coluna << '\n';
   }
 
-  linha = 0;
-  coluna = 0;
+  linha = -1;
+  coluna = -1;
   linha = colunacb(jogo, tamanho, busca, &coluna);
-  if((linha && coluna) > 0){
+  if(linha >= 0 && coluna >= 0){
     cout << "Achou coluna de cima para baixo\n";
     cout << "Linha: " << linha + 1 << '\n';
     cout << "Coluna: " << coluna << '\n';
   }
 
-  linha = 0;
-  coluna = 0;
+  linha = -1;
+  coluna = -1;
   linha = colunabc(jogo, tamanho, busca, &coluna);
-  if((linha && coluna) > 0){
+  if(linha >= 0 && coluna >= 0){
     cout << "Achou coluna de baixo para cima\n";
     cout << "Linha: " << linha + 1 << '\n';
     cout << "Coluna: " << coluna << '\n';
   }
 
-  linha = 0;
-  coluna = 0;
+  linha = -1;
+  coluna = -1;
   linha = diagonalPrin(jogo, tamanho, busca, &coluna);
-  if((linha && coluna) > 0){
+  if(linha >= 0 && coluna >= 0){
     cout << "Achou na diagonal principal da esquerda para direita\n";
     cout << "Linha: " << linha + 1 << '\n';
     cout << "Coluna: " << coluna << '\n';
   }
 
-  linha = 0;
-  coluna = 0;
+  linha = -1;
+  coluna = -1;
   linha = diagonalPrinInv(jogo, tamanho, busca, &coluna);
-  if((linha && coluna) > 0){
+  if(linha >= 0 && coluna >= 0){
     cout << "Achou na diagonal principal da direita para esquerda\n";
     cout << "Linha: " << linha + 1 << '\n';
     cout << "Coluna: " << coluna << '\n';
   }
 
-  linha = 0;
-  coluna = 0;
+  linha = -1;
+  coluna = -1;
   linha = diagonalSecun(jogo, tamanho, busca, &coluna);
-  if((linha && coluna) > 0){
-    cout << "Achou na diagonal secundaria da esquerda para direita\n";
-    cout << "Linha: " << linha + 1 << '\n';
-    cout << "Coluna: " << coluna << '\n';
-  }
-
-  linha = 0;
-  coluna = 0;
-  linha = diagonalSecunInv(jogo, tamanho, busca, &coluna);
-  if((linha && coluna) > 0){
+  if(linha >= 0 && coluna >= 0){
     cout << "Achou na diagonal secundaria da direita para esquerda\n";
     cout << "Linha: " << linha + 1 << '\n';
     cout << "Coluna: " << coluna << '\n';
   }
+
+  linha = -1;
+  coluna = -1;
+  linha = diagonalSecunInv(jogo, tamanho, busca, &coluna);
+  if(linha >= 0 && coluna >= 0){
+    cout << "Achou na diagonal secundaria da esquerda para esquerda\n";
+    cout << "Linha: " << linha + 1 << '\n';
+    cout << "Coluna: " << coluna << '\n';
+  }
+
+  cout << "Busca finalizada com sucesso";
 
   delete jogo;
   delete busca;
