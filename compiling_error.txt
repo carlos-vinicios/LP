@@ -1,0 +1,17 @@
+/home/carlos_vinicios/Documentos/GitHub/LP/lista_musica.cpp: In function ‘int killEquals()’:
+/home/carlos_vinicios/Documentos/GitHub/LP/lista_musica.cpp:20:31: error: invalid conversion from ‘const char*’ to ‘int’ [-fpermissive]
+   while(fgets(linha, "/", data) != NULL){
+                               ^
+In file included from /usr/include/c++/7/cstdio:42:0,
+                 from /usr/include/c++/7/ext/string_conversions.h:43,
+                 from /usr/include/c++/7/bits/basic_string.h:6349,
+                 from /usr/include/c++/7/string:52,
+                 from /usr/include/c++/7/bits/locale_classes.h:40,
+                 from /usr/include/c++/7/bits/ios_base.h:41,
+                 from /usr/include/c++/7/ios:42,
+                 from /usr/include/c++/7/ostream:38,
+                 from /usr/include/c++/7/iostream:39,
+                 from /home/carlos_vinicios/Documentos/GitHub/LP/lista_musica.cpp:1:
+/usr/include/stdio.h:564:14: note:   initializing argument 2 of ‘char* fgets(char*, int, FILE*)’
+ extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
+              ^~~~~
